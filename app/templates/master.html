@@ -65,11 +65,31 @@
 </div>
 
 <script type="text/javascript">
-    const graphs = {{graphJSON | safe}};
-    const ids = {{ids | safe}};
-    for(let i in graphs) {
-        Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
-    }
+    // Check if graphJSON and ids are properly initialized and contain valid data
+if (graphJSON && ids) {
+    // Convert JSON strings to objects
+    const graphs = JSON.parse(graphJSON);
+    const idsArray = JSON.parse(ids);
+
+    // Iterate over each graph and corresponding ID
+    Object.keys(graphs).forEach((key, i) => {
+        const graph = graphs[key];
+        const id = idsArray[i];
+
+        // Check if the element ID exists
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error(`Element with ID ${id} not found.`);
+            return; // Skip this graph if the element doesn't exist
+        }
+
+        // Plot the graph using Plotly
+        Plotly.plot(element, graph.data, graph.layout);
+    });
+} else {
+    console.error("graphJSON or ids are not properly initialized or contain invalid data.");
+}
+
 </script>
 
 </body>
